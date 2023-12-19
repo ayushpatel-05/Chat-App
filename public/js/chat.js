@@ -1,13 +1,5 @@
 const socket = io();
-// const btn = document.getElementById('increment');
 
-// socket.on('countUpdated', (count) => {
-//     console.log('The count has been updated', count);
-// })
-// btn.addEventListener('click', () => {
-//     console.log('Clicked');
-//     socket.emit('increment');
-// })
 const frm = document.getElementById('message-form');
 const frmInput = frm.querySelector('input');
 const frmButton = frm.querySelector('button');
@@ -19,7 +11,6 @@ const messages = document.getElementById('messages');
 const messageTemplate = document.getElementById('message-template').innerHTML;
 const locationMessageTemplate = document.getElementById('location-message-template').innerHTML;
 const sidebarTemplate = document.getElementById('sidebar-template').innerHTML;
-// console.log(frm);
 
 //Options
 const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true});
@@ -27,11 +18,8 @@ const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix : true});
 
 frm.addEventListener('submit', (event) => {
     event.preventDefault();
-    // frmButton.setAttribute('disabled',true);
     frmButton.disabled = true;
-    // const message = document.querySelector('input').value;
     const message = event.target.elements.message.value;
-    // event.target.elements.message.value = '';
     
     socket.emit('sendMessage', message, (error) => {
         frmButton.disabled = false;
@@ -40,7 +28,6 @@ frm.addEventListener('submit', (event) => {
         if(error) {
             return console.log(error);
         }
-        // console.log('Message Delivered');
     });
 })
 
@@ -57,7 +44,6 @@ locationBtn.addEventListener('click', () => {
         }
         socket.emit('sendLocation', location, () => {
             locationBtn.disabled = false;
-            // console.log('Location Shared!');
         });
     })
 })
@@ -68,7 +54,6 @@ const autoScroll = () => {
     const newMessageStyles = getComputedStyle(newMessage);
     const newMessageMargin = parseInt(newMessageStyles.marginBottom);
     const newMessageHeight = newMessage.offsetHeight + newMessageMargin;
-    // console.log(newMessageStyles.height);
 
     const visibleHeight = messages.offsetHeight;
     const containerHeight = messages.scrollHeight;
@@ -81,8 +66,6 @@ const autoScroll = () => {
 
 
 socket.on('message', (message) => {
-    // console.log(message);
-    // console.log(message.username);
     const html = Mustache.render(messageTemplate, {
         username: message.username,
         createdAt: moment(message.createdAt).format('h:mm a'),
@@ -98,10 +81,8 @@ socket.on('locationMessage', (obj) => {
         url: obj.url,
         createdAt: moment(obj.createdAt).format('h:mm a')
     });
-    // console.log(html);
     messages.insertAdjacentHTML('beforeend', html);
     autoScroll();
-    // console.log(message);
 });
 
 socket.on('roomData', ({ room, users}) => {

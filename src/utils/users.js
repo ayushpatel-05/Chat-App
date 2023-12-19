@@ -35,6 +35,10 @@ const removeUser = (id) => {
     if(index !== -1) {
         return users.splice(index, 1)[0];
     }
+
+    return {
+        error: 'Username is not in use!'
+    }
 }
 
 
@@ -43,12 +47,12 @@ const getUser = (id) => {
         return user.id === id;
     });
 
-    // if(!user)
-    // {
-    //     return {
-    //         error: 'No such user exists'
-    //     }
-    // }
+    if(!user)
+    {
+        return {
+            error: 'No such user exists'
+        }
+    }
 
     return user;
 }

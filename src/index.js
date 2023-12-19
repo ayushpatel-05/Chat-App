@@ -17,16 +17,11 @@ const io = socketio(server);
 const publicDirectoryPath = path.join(__dirname,'../public');
 
 app.use(express.static(publicDirectoryPath));
-// app.listen('/', (req, res) => {
-//     res.render('index.html')
-// })
 
 let count = 0;
 
 io.on('connection', (socket) => {
     console.log('New WebSocket Connection');
-
-    // socket.emit('countUpdated', count);
     
 
     socket.on('join', ({username, room}, callback) => {
@@ -56,6 +51,11 @@ io.on('connection', (socket) => {
         }
 
         const user = getUser(socket.id);
+        if(user.error)
+        {
+            return callback(error);
+        }
+
         io.to(user.room).emit('message', generateMessage(user.username, message));
         callback();
     });
@@ -69,6 +69,11 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
+
+        if(user.error)
+        {
+            return callback(error);
+        }
 
         if(user) {
             io.to(user.room).emit('message', generateMessage('Admin',`${user.username} has left`));
