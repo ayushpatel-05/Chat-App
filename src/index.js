@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
+const PORT = process.env.PORT || 3000; 
 const { generateMessage, generateLocationMessages } = require('./utils/messages');
 const { addUser,
         removeUser,
@@ -72,7 +73,7 @@ io.on('connection', (socket) => {
 
         if(user.error)
         {
-            return callback(error);
+            console.log(callback(error));
         }
 
         if(user) {
@@ -86,6 +87,6 @@ io.on('connection', (socket) => {
 })
 
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
     console.log("Server up and running");
 })
